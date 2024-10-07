@@ -29,7 +29,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "src/api/get-transaction-type/route.js"
+    "src/pages/api/get-transaction-type/route.ts"
   ],
   "exclude": [
     "node_modules"
