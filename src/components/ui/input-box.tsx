@@ -25,10 +25,18 @@ export default function ModernTextInputWithNavbar() {
   // Move the useSendTransaction hook call here
   const { data: hash, sendTransaction } = useSendTransaction();
 
-  const HandleSubmit = (e: React.FormEvent) => {
+  const HandleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); 
     //result if 0,1,2
     //if 1: {address, value}
+    const result = await fetch('/api/get-transaction-type', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text: transcript }),
+    }).then(response => response.json());
+    console.log(result)
     sendTransaction({ to: `0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`, value: parseEther(".0000001") });
 
     console.log('Transaction text:', text);
