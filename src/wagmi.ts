@@ -1,7 +1,8 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import {
 
-  rootstockTestnet
+  rootstockTestnet,
+  sepolia
 } from 'wagmi/chains';
 
 export const config = getDefaultConfig({
@@ -9,6 +10,7 @@ export const config = getDefaultConfig({
   projectId: 'YOUR_PROJECT_ID',
   chains: [
     rootstockTestnet,
+    sepolia
   ],
   ssr: true,
 });

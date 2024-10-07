@@ -7,6 +7,9 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import Link from 'next/link'
 import { TiMicrophone } from "react-icons/ti";
 import { IoIosPause } from "react-icons/io";
+import { useSendTransaction } from 'wagmi'
+import { parseEther } from 'viem'
+
 
 
 declare global {
@@ -19,6 +22,17 @@ declare global {
 
 
 export default function ModernTextInputWithNavbar() {
+  // Move the useSendTransaction hook call here
+  const { data: hash, sendTransaction } = useSendTransaction();
+
+  const HandleSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); 
+    
+    sendTransaction({ to: `0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`, value: parseEther(".0000001") });
+
+    console.log('Transaction text:', text);
+  }
+
   // State variables to manage recording status, completion, and transcript
 const [isRecording, setIsRecording] = useState(false);
 const [recordingComplete, setRecordingComplete] = useState(false);
@@ -39,10 +53,15 @@ const startRecording = () => {
   recognitionRef.current.onresult = (event: any) => {
     const { transcript } = event.results[event.results.length - 1][0];
 
+    // Replace "sepulia" with "sepolia" in the transcript
+    const updatedTranscript = transcript
+      .replace(/sepulia/g, 'sepolia')
+      .replace(/\.eat\b/g, '.eth'); // Replace .eat with .eth
+
     // Log the recognition results and update the transcript state
     console.log(event.results);
-    setTranscript(transcript);
-    setText(transcript); // Update the text state to reflect the transcript
+    setTranscript(updatedTranscript);
+    setText(updatedTranscript); // Update the text state to reflect the updated transcript
   };
 
   // Start the speech recognition
@@ -82,19 +101,14 @@ const handleToggleRecording = () => {
   const [text, setText] = useState('')
   const BACKEND_URL="http://localhost:8000"
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log('Transaction text:', text)
-  }
-
   return (
     <div className="min-h-screen flex flex-col bg-white">      
       <div className="flex-grow flex items-center justify-center p-4">
         <Card className="w-full max-w-md bg-gradient-to-br from-gray-900 to-black border-orange-500 border-2">
           <CardHeader className="border-b border-orange-500/20">
-            <CardTitle className="text-2xl font-bold text-white text-center">Share Your Thoughts</CardTitle>
+            <CardTitle className="text-2xl font-bold text-white text-center">Rootstock Voice Transactions</CardTitle>
           </CardHeader>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={HandleSubmit}>
             <CardContent className="pt-6">
               <Textarea
                 placeholder="Type your message here..."
