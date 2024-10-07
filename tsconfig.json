@@ -28,7 +28,8 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "src/(api)/text-to-transaction/route.js"
   ],
   "exclude": [
     "node_modules"

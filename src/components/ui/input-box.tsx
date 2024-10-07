@@ -27,7 +27,8 @@ export default function ModernTextInputWithNavbar() {
 
   const HandleSubmit = (e: React.FormEvent) => {
     e.preventDefault(); 
-    
+    //result if 0,1,2
+    //if 1: {address, value}
     sendTransaction({ to: `0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`, value: parseEther(".0000001") });
 
     console.log('Transaction text:', text);
