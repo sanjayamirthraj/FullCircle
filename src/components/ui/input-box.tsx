@@ -6,9 +6,16 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import Link from 'next/link'
 import { NavigationHeader } from './NavBar'
+import { ethers } from 'ethers'
 
 export default function ModernTextInputWithNavbar() {
   const [text, setText] = useState('')
+  const [intentValue, setIntentValue] = useState<string>("");
+  const [status, setStatus] = useState<React.ReactNode>(<></>);
+  const [showStatusPopup, setShowStatusPopup] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const BACKEND_URL=""
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()

@@ -3,6 +3,7 @@ import type { NextPage } from 'next';
 import ModernTextInputWithNavbar from '@/components/ui/input-box';
 import { useAccount } from 'wagmi'
 import { NavigationHeader } from '@/components/ui/NavBar';
+import NotSignedIn from '@/components/ui/wallet-sign-in';
 
 const Home: NextPage = () => {
   const account = useAccount();
@@ -10,11 +11,10 @@ const Home: NextPage = () => {
   return (
     <div>
       <NavigationHeader/>
-
       {account.status === 'connected' ? (
         <ModernTextInputWithNavbar />
       ) : (
-        <div>Connect</div>
+        <NotSignedIn />
       )}
     </div>
   );
