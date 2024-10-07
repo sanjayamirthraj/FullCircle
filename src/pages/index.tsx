@@ -4,6 +4,7 @@ import ModernTextInputWithNavbar from '@/components/ui/input-box';
 import { useAccount } from 'wagmi'
 import { NavigationHeader } from '@/components/ui/NavBar';
 import NotSignedIn from '@/components/ui/wallet-sign-in';
+import Microphone from '@/components/ui/Microphone';
 
 const Home: NextPage = () => {
   const account = useAccount();
