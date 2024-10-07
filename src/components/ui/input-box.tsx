@@ -29,7 +29,7 @@ export default function ModernTextInputWithNavbar() {
     e.preventDefault(); 
     //result if 0,1,2
     //if 1: {address, value}
-    const result = await fetch('/api/get-transaction-type/route', {
+    const result = await fetch('/api/send-money/route', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

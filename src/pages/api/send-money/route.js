@@ -1,37 +1,27 @@
-import OpenAI from "openai";
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+
+import Groq from "groq-sdk";
+const groq = new Groq({
+    apiKey: "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"
 });
-export async function POST(request) {
-    try {
-        const { message } = await request.json();
+export default async function handler(req, res) {
+    const message = req.body.text;
+    console.log(message)
+    let json = await getGroqChatCompletion(message)
+    json = json.choices[0].message.content
+    res.status(200).json({ json });
 
-        if (!message) {
-            return NextResponse.json({ error: 'Message is required' }, { status: 400 });
-        }
-
-        const openAiResponse = await callOpenAi(message);
-        return NextResponse.json(openAiResponse);
-
-
-    } catch (error) {
-        console.error('Error sending transaction (API):', error);
-        return NextResponse.json({ error: 'Something went wrong while checking for transaction (API).' }, { status: 500 });
-    }
 }
 
-// New function to call OpenAI API
-async function callOpenAi(message) {
-    const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+async function getGroqChatCompletion(message) {
+    let combined = `${message}. from this message identify who this is transacting to and the amount. Return ONLY a json of these. don't turn ENS into an address; do not return any other text`
+    let assistant = "do not say more than just the json "
+    return groq.chat.completions.create({
         messages: [
-            { role: "system", content: "You are a financial assistant that can parse text and return JSON of the wallet address a user wants to send tokens to and the value of how much in tokens the user wants to send." },
             {
                 role: "user",
-                content: `Return a JSON object with the user's wallet address and the amount based on the message: ${message}`,
-            },
+                content: combined,
+            }
         ],
+        model: "llama3-8b-8192",
     });
-    const message = JSON.stringify(completion[0].message)
-    console.log(message)
 }

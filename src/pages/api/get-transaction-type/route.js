@@ -7,13 +7,13 @@ const openai = new OpenAI({
 export default async function handler(req, res) {
     const message = req.body.text;
     console.log(message)
-    let which = 1
+    let which
     if (message.includes("send")) {
         which = 1;
     } else if (message.includes("swap")) {
-        which = 2; // Return 2 if the message contains "swap"
+        which = 2;
     } else {
-        which = 0; // Return 0 for any other case
+        which = 0;
     }
     if (which !== null) {
         res.status(200).json({ which });
@@ -24,11 +24,11 @@ export default async function handler(req, res) {
 
 // New function to call OpenAI API
 async function callOpenAi(message) {
-    if (message.includes("send")) {
-        return 1; // Return 1 if the message contains "send"
-    } else if (message.includes("swap")) {
-        return 2; // Return 2 if the message contains "swap"
-    } else {
-        return 0; // Return 0 for any other case
-    }
+    const completion = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+            { "role": "user", "content": `check the  given message, ${message} for the presence of the words 'send' or 'swap'. The function should return 1 if the message contains 'send', return 2 if it contains 'swap', and return 0 if neither word is present.` }
+        ]
+    });
+    return completion.choices[0].message
 }
