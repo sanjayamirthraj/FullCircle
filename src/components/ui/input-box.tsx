@@ -29,6 +29,17 @@ export default function ModernTextInputWithNavbar() {
     e.preventDefault(); 
     //result if 0,1,2
     //if 1: {address, value}
+    const whatType = await fetch('/api/get-transaction-type/route',{
+      method: 'POST',
+      headers:  {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text: text }),
+    }).then(response => response.json())
+
+    console.log("Whattype:", whatType);
+
+    if (whatType.which === 1) {
     const result = await fetch('/api/send-money/route', {
       method: 'POST',
       headers: {
@@ -37,10 +48,13 @@ export default function ModernTextInputWithNavbar() {
       body: JSON.stringify({ text: text }),
     }).then(response => response.json());
 
-    console.log(result)
-    //sendTransaction({ to: `0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238`, value: parseEther(".0000001") });
-
-    //console.log('Transaction text:', text);
+    const jsonResult = JSON.parse(result.json);
+    const recipient = jsonResult.to.toString();
+    const amount = jsonResult.amount.toString(); // Convert amount to string
+    //console.log({ recipient, amount });
+ 
+    sendTransaction({ to: recipient, value: parseEther(amount) });
+  }
   }
 
   // State variables to manage recording status, completion, and transcript
