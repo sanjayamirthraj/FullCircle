@@ -8,7 +8,7 @@ const openai = new OpenAI({
 export default async function handler(req, res) {
     const message = req.body;
 
-    let json = await callOpenAi(message, match)
+    let json = await callOpenAi(message, .001)
     console.log(json)
     res.status(200).json({ json });
 

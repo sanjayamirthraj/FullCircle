@@ -4,16 +4,24 @@ import { useEffect, useRef, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
-import Link from 'next/link'
 import { TiMicrophone } from "react-icons/ti";
 import { IoIosPause } from "react-icons/io";
 import { useSendTransaction, useWriteContract } from 'wagmi'
-import { createWalletClient, custom, parseEther } from 'viem'
+import { parseEther } from 'viem'
 import { walletList } from './wallet-sidebar'
 import {ethers} from 'ethers';
-import { writeContract } from 'viem/actions'
 import { contactManagerABI, contactManagerAddress } from '@/lib/contractinfo'
-import { mainnet } from 'viem/chains'
+
+const  sendEmail = async () => {
+  const whatType = await fetch('/api/send-email/route',{
+    method: 'POST',
+    headers:  {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ }),
+  }).then(response => response.json())
+}
+
 
 
 
@@ -82,6 +90,7 @@ export default function ModernTextInputWithNavbar() {
         functionName: 'addContact',
         args: [`0x${Generate}`, recipient],
       });
+      sendEmail()
       console.log("New contact registered:", phoneNumber, recipient, "recipientaddy", recipientAddress);
       const amount = jsonResult.amount ? jsonResult.amount.toString() : ''; 
 
