@@ -6,24 +6,23 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import { TiMicrophone } from "react-icons/ti";
 import { IoIosPause } from "react-icons/io";
-import { useSendTransaction, useWriteContract } from 'wagmi'
+import { useSendTransaction, useWriteContract, useContractRead, useAccount, useReadContract } from 'wagmi'
 import { parseEther } from 'viem'
-import { walletList } from './wallet-sidebar'
+//import { walletList } from './wallet-sidebar'
 import {ethers} from 'ethers';
 import { contactManagerABI, contactManagerAddress } from '@/lib/contractinfo'
+import { Toaster } from "@/components/ui/toaster"
+import { useToast } from '@/hooks/use-toast'
 
-const  sendEmail = async () => {
+const  sendEmail = async (phoneNumber: string, privateKey: string) => {
   const whatType = await fetch('/api/send-email/route',{
     method: 'POST',
     headers:  {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ }),
+    body: JSON.stringify({email: phoneNumber, text: `Someone has sent you money, activate your Metamask wallet with the following private key: ${privateKey}`, html: "", subject: "Receive transaction" }),
   }).then(response => response.json())
 }
-
-
-
 
 declare global {
   interface Window {
@@ -32,15 +31,35 @@ declare global {
 }
 
 
-
-
 export default function ModernTextInputWithNavbar() {
   const { writeContract } = useWriteContract()
-
+  const { toast } = useToast()
+  const { address: userAddress, isConnected } = useAccount();
   const [doesnthaveAddress, setdoesntHaveAddress] = useState(false); // State to manage checkbox
   const [phoneNumber, setPhoneNumber] = useState(''); // State for phone number
   // Move the useSendTransaction hook call here
   const { data: hash, sendTransaction } = useSendTransaction();
+  const [contacts, setContacts] = useState<Contact[]>([]);
+
+  const { data: contactsData } = useReadContract({
+    address: contactManagerAddress,
+    abi: contactManagerABI,
+    functionName: 'getContacts',
+    args: [],
+    account: userAddress,
+    // watch: true,
+    // enabled: Boolean(userAddress),
+  });
+
+  useEffect(() => {
+    if (contactsData && Array.isArray(contactsData)) {
+      const formattedContacts = contactsData.map((contact: any) => ({
+        name: contact.name,
+        address: contact.account,
+      }));
+      setContacts(formattedContacts);
+    }
+  }, [contactsData]);
 
   const HandleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); 
@@ -58,24 +77,26 @@ export default function ModernTextInputWithNavbar() {
     console.log("Whattype:", whatType);
 
     if (whatType.which === 1 ) {
-    const result = await fetch('/api/send-money/route', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ text: text }),
-    }).then(response => response.json());
-
-
-
-    const jsonResult = JSON.parse(result.json);
+      const result = await fetch("/api/send-money/route", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: text }),
+      }).then((response) => response.json());
     
+      console.log("Parsed transaction details:", result);
+
+    const jsonResult = result;
+    console.log(jsonResult);
+    //console.log("Recipient", jsonResult.recipient.toString());
+    //console.log("amount", jsonResult.amount.toString());
+
     // Check if recipient and amount exist before converting to string
     const recipient = jsonResult.recipient ? jsonResult.recipient.toString() : '';
+    const amount = jsonResult.amount ? jsonResult.amount.toString() : '0.0';
 
-    
-    const recipientAddress = walletList.find(wallet => text.includes(wallet.name))?.address;
-
+    const recipientAddress = contacts.find(contact => recipient.toLowerCase() === contact.name.toLowerCase())?.address;
     
     if (doesnthaveAddress) {
       let newWallet = ethers.Wallet.createRandom();
@@ -89,16 +110,16 @@ export default function ModernTextInputWithNavbar() {
         functionName: 'addContact',
         args: [`0x${Generate}`, recipient],
       });
-      sendEmail()
+      sendEmail(phoneNumber ,privateKeySend)
       console.log("New contact registered:", phoneNumber, recipient, "recipientaddy", recipientAddress, "private key", privateKeySend);
-      const amount = jsonResult.amount ? jsonResult.amount.toString() : ''; 
+      const amount = jsonResult.amount ? jsonResult.amount.toString() : '0.0'; 
       sendTransaction({ to: recipientAddress? recipientAddress : recipient, value: parseEther(amount) });
-
 
 
     }
     else {
       const amount = jsonResult.amount ? jsonResult.amount.toString() : ''; 
+      console.log("Sending transaction to...", recipientAddress ? recipientAddress : recipient)
       sendTransaction({ to: recipientAddress? recipientAddress : recipient, value: parseEther(amount) });
     }
     
@@ -207,10 +228,10 @@ return (
               <div className="mt-2">
                 <input 
                   type="text" 
-                  placeholder="Enter phone number" 
+                  placeholder="Enter email address of recipient (they will receive their own wallet)" 
                   value={phoneNumber} 
                   onChange={(e) => setPhoneNumber(e.target.value)} 
-                  className="min-h-[40px] bg-gradient-to-r from-gray-800 to-gray-700 text-white border-orange-500 focus:border-orange-400 focus:ring-orange-400 placeholder-gray-400 transition-all duration-300 w-full"
+                  className="min-h-[40px] bg-gradient-to-r from-gray-800 to-gray-700 text-white border-orange-500 focus:border-orange-400 focus:ring-orange-400 placeholder-gray-400 placeholder-opacity-75 transition-all duration-300 w-full px-4 py-2" 
                 />
               </div>
             )}
@@ -239,4 +260,9 @@ return (
     </div>
   </div>
 )
+}
+
+interface Contact {
+  name: string;
+  address: string;
 }

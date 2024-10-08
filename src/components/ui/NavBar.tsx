@@ -6,7 +6,7 @@ import Link from "next/link";
 const navigation = [
   { href: "/", label: "Home" },
   { href: "/how-to-use", label: "How to Use" }, 
-  { href: "/about", label: "About" }, 
+  { href: "https://github.com/sanjayamirthraj/FullCircle", label: "About" }, 
 ];
 
 const linkClasses = "text-foreground transition-colors hover:text-foreground";
