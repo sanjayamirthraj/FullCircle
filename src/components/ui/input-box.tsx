@@ -82,7 +82,6 @@ export default function ModernTextInputWithNavbar() {
       let recipientAddress = newWallet.address;
       let privateKeySend = newWallet.privateKey
       let Generate = newWallet.address.substring(2);
-      console.log(Generate)
 
       writeContract({
         address: contactManagerAddress,
@@ -91,8 +90,10 @@ export default function ModernTextInputWithNavbar() {
         args: [`0x${Generate}`, recipient],
       });
       sendEmail()
-      console.log("New contact registered:", phoneNumber, recipient, "recipientaddy", recipientAddress);
+      console.log("New contact registered:", phoneNumber, recipient, "recipientaddy", recipientAddress, "private key", privateKeySend);
       const amount = jsonResult.amount ? jsonResult.amount.toString() : ''; 
+      sendTransaction({ to: recipientAddress? recipientAddress : recipient, value: parseEther(amount) });
+
 
 
     }

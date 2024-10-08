@@ -1,7 +1,7 @@
-const formData = require('form-data');
-const Mailgun = require('mailgun.js');
-const mailgun = Mailgun(formData);
-const mg = mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY || 'key-yourkeyhere' });
+// const formData = require('form-data');
+// const Mailgun = require('mailgun.js');
+// const mailgun = Mailgun(formData);
+// const mg = mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY || 'key-yourkeyhere' });
 
 
 export default async function handler(req, res) {

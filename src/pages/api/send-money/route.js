@@ -7,8 +7,8 @@ const openai = new OpenAI({
 
 export default async function handler(req, res) {
     const message = req.body;
-
-    let json = await callOpenAi(message, .001)
+    const amountParsed = message.text.match(/\d+(\.\d+)?/);
+    let json = await callOpenAi(message, amountParsed)
     console.log(json)
     res.status(200).json({ json });
 
