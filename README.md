@@ -14,6 +14,23 @@ Here’s an updated and more specific README for your project:
 2. **Send Funds to Non-Wallet Holders**  
    If the recipient doesn’t have a crypto wallet, users can send funds via their email. FullCircle will generate a wallet address and private key for the recipient, securely transmitting the information over Mailgun’s SMTP server.
 
+## Integration with Rootstock
+
+FullCircle integrates with **Rootstock**, a smart contract platform that is merge-compatible with Bitcoin. Users send and receive payments on the Rootstock chain (and testnet). FullCircle utilizes Rootstock's security of the Bitcoin chain while also enabling smart contracts, including ones we have developed. 
+
+Check out our deployed smart contract here: [Smart Contract on Rootstock Explorer](https://explorer.testnet.rootstock.io/address/0xa81e1516c8253cc33f95737f8e8ca499e62779dd)
+
+## Meet the Team
+Sanjay Amirthraj is a student at UC Berkeley and a member of Blockchain at Berkeley. He has a particular interest in DeFi and applications of decentralized technology in various industries, including Biotech.
+
+Varun Vaidys is also a student at UC Berkeley and a member of Blockchain at Berkeley. Varun is interested in the Distributed Systems and Zero-Knowledge Proof mechanisms. 
+
+## Integration with Rootstock
+
+FullCircle integrates with **Rootstock**, a smart contract platform that is merge-compatible with Bitcoin. This integration allows users to leverage the security and stability of the Bitcoin network while utilizing smart contracts for enhanced functionality. By connecting to Rootstock, FullCircle enables seamless on-chain transactions and the ability to interact with decentralized applications (dApps) built on the Rootstock platform.
+
+
+
 ## Getting Started
 
 To run the project locally, ensure your environment is properly configured.
