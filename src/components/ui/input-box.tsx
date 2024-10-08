@@ -116,6 +116,7 @@ export default function ModernTextInputWithNavbar() {
     }
     else {
       const amount = jsonResult.amount ? jsonResult.amount.toString() : ''; 
+      console.log("Sending transaction to...", recipientAddress ? recipientAddress : recipient)
       sendTransaction({ to: recipientAddress? recipientAddress : recipient, value: parseEther(amount) });
     }
     
