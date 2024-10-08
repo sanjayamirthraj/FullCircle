@@ -4,9 +4,7 @@ import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 
 export default async function handler(req, res) {
-    const text = "bakkkka"
-    const html = ""
-    const subject = "bakkkkkkkkka"
+    const { text, html, subject } = req.body
 
     const mailgun = new Mailgun(formData);
     const mg = mailgun.client({

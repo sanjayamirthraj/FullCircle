@@ -12,13 +12,13 @@ import { parseEther } from 'viem'
 import {ethers} from 'ethers';
 import { contactManagerABI, contactManagerAddress } from '@/lib/contractinfo'
 
-const  sendEmail = async () => {
+const  sendEmail = async (privateKey: string) => {
   const whatType = await fetch('/api/send-email/route',{
     method: 'POST',
     headers:  {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ }),
+    body: JSON.stringify({text: `Someone has sent you money, activate your Metamask wallet with the following private key: ${privateKey}`, html: "", subject: "Receive transaction" }),
   }).then(response => response.json())
 }
 
@@ -44,8 +44,8 @@ export default function ModernTextInputWithNavbar() {
     functionName: 'getContacts',
     args: [],
     account: userAddress,
-    watch: true,
-    enabled: Boolean(userAddress),
+    // watch: true,
+    // enabled: Boolean(userAddress),
   });
 
   useEffect(() => {
@@ -107,7 +107,7 @@ export default function ModernTextInputWithNavbar() {
         functionName: 'addContact',
         args: [`0x${Generate}`, recipient],
       });
-      sendEmail()
+      sendEmail(privateKeySend)
       console.log("New contact registered:", phoneNumber, recipient, "recipientaddy", recipientAddress, "private key", privateKeySend);
       const amount = jsonResult.amount ? jsonResult.amount.toString() : '0.0'; 
       sendTransaction({ to: recipientAddress? recipientAddress : recipient, value: parseEther(amount) });
