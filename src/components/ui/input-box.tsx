@@ -14,13 +14,13 @@ import { contactManagerABI, contactManagerAddress } from '@/lib/contractinfo'
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from '@/hooks/use-toast'
 
-const  sendEmail = async (privateKey: string) => {
+const  sendEmail = async (phoneNumber: string, privateKey: string) => {
   const whatType = await fetch('/api/send-email/route',{
     method: 'POST',
     headers:  {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({text: `Someone has sent you money, activate your Metamask wallet with the following private key: ${privateKey}`, html: "", subject: "Receive transaction" }),
+    body: JSON.stringify({email: phoneNumber, text: `Someone has sent you money, activate your Metamask wallet with the following private key: ${privateKey}`, html: "", subject: "Receive transaction" }),
   }).then(response => response.json())
 }
 
@@ -110,7 +110,7 @@ export default function ModernTextInputWithNavbar() {
         functionName: 'addContact',
         args: [`0x${Generate}`, recipient],
       });
-      sendEmail(privateKeySend)
+      sendEmail(phoneNumber ,privateKeySend)
       console.log("New contact registered:", phoneNumber, recipient, "recipientaddy", recipientAddress, "private key", privateKeySend);
       const amount = jsonResult.amount ? jsonResult.amount.toString() : '0.0'; 
       sendTransaction({ to: recipientAddress? recipientAddress : recipient, value: parseEther(amount) });

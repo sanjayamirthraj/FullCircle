@@ -4,7 +4,7 @@ import formData from 'form-data';
 import Mailgun from 'mailgun.js';
 
 export default async function handler(req, res) {
-    const { text, html, subject } = req.body
+    const { email, text, html, subject } = req.body
 
     const mailgun = new Mailgun(formData);
     const mg = mailgun.client({
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     try {
         const msg = await mg.messages.create('sandbox17e768f0e68149d398f8ca4ba06c9fd8.mailgun.org', {
             from: "Excited User <mailgun@sandbox17e768f0e68149d398f8ca4ba06c9fd8.mailgun.org>",
-            to: [MAILGUN_EMAIL],
+            to: [email],
             subject: subject,
             text: text,
             html: html,
