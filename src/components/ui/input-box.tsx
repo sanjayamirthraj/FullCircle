@@ -119,15 +119,6 @@ export default function ModernTextInputWithNavbar() {
     }
     else {
       const amount = jsonResult.amount ? jsonResult.amount.toString() : ''; 
-      const hexRegex = /^0x[0-9a-fA-F]{40}$/;
-      if (!hexRegex.test(recipient)) {
-        console.log("Not a hex");
-        toast({
-          title: "Recipient Error",
-          description: "Recipient does not exist in your contacts, check the box if you would like to create them a wallet or add their existing wallet to your contacts.",
-        });
-        return;
-      }
       console.log("Sending transaction to...", recipientAddress ? recipientAddress : recipient)
       sendTransaction({ to: recipientAddress? recipientAddress : recipient, value: parseEther(amount) });
     }
