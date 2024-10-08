@@ -83,7 +83,7 @@ export default function ModernTextInputWithNavbar() {
       let privateKeySend = newWallet.privateKey
       let Generate = newWallet.address.substring(2);
 
-      writeContract({
+       writeContract({
         address: contactManagerAddress,
         abi: contactManagerABI,
         functionName: 'addContact',

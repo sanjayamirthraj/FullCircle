@@ -1,4 +1,4 @@
-export const contactManagerAddress = '0x56D00509536aDa38928B27A03086DaFFe88A4C73'
+export const contactManagerAddress = '0xA81e1516C8253cC33f95737f8e8cA499E62779dD'
 export const contactManagerABI = [
     {
         "anonymous": false,
