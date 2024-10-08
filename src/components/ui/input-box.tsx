@@ -7,9 +7,13 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import Link from 'next/link'
 import { TiMicrophone } from "react-icons/ti";
 import { IoIosPause } from "react-icons/io";
-import { useSendTransaction } from 'wagmi'
-import { parseEther } from 'viem'
+import { useSendTransaction, useWriteContract } from 'wagmi'
+import { createWalletClient, custom, parseEther } from 'viem'
 import { walletList } from './wallet-sidebar'
+import {ethers} from 'ethers';
+import { writeContract } from 'viem/actions'
+import { contactManagerABI, contactManagerAddress } from '@/lib/contractinfo'
+import { mainnet } from 'viem/chains'
 
 
 
@@ -23,6 +27,10 @@ declare global {
 
 
 export default function ModernTextInputWithNavbar() {
+  const { writeContract } = useWriteContract()
+
+  const [doesnthaveAddress, setdoesntHaveAddress] = useState(false); // State to manage checkbox
+  const [phoneNumber, setPhoneNumber] = useState(''); // State for phone number
   // Move the useSendTransaction hook call here
   const { data: hash, sendTransaction } = useSendTransaction();
 
@@ -30,6 +38,7 @@ export default function ModernTextInputWithNavbar() {
     e.preventDefault(); 
     //result if 0,1,2
     //if 1: {address, value}
+
     const whatType = await fetch('/api/get-transaction-type/route',{
       method: 'POST',
       headers:  {
@@ -40,7 +49,7 @@ export default function ModernTextInputWithNavbar() {
 
     console.log("Whattype:", whatType);
 
-    if (whatType.which === 1) {
+    if (whatType.which === 1 ) {
     const result = await fetch('/api/send-money/route', {
       method: 'POST',
       headers: {
@@ -49,14 +58,41 @@ export default function ModernTextInputWithNavbar() {
       body: JSON.stringify({ text: text }),
     }).then(response => response.json());
 
+
+
     const jsonResult = JSON.parse(result.json);
     
     // Check if recipient and amount exist before converting to string
     const recipient = jsonResult.recipient ? jsonResult.recipient.toString() : '';
-    const recipientAddress = walletList.find(wallet => text.includes(wallet.name))?.address;
-    const amount = jsonResult.amount ? jsonResult.amount.toString() : ''; 
+
     
-    sendTransaction({ to: recipientAddress? recipientAddress : recipient, value: parseEther(amount) });
+    const recipientAddress = walletList.find(wallet => text.includes(wallet.name))?.address;
+
+    
+    if (doesnthaveAddress) {
+      let newWallet = ethers.Wallet.createRandom();
+      let recipientAddress = newWallet.address;
+      let privateKeySend = newWallet.privateKey
+      let Generate = newWallet.address.substring(2);
+      console.log(Generate)
+
+      writeContract({
+        address: contactManagerAddress,
+        abi: contactManagerABI,
+        functionName: 'addContact',
+        args: [`0x${Generate}`, recipient],
+      });
+      console.log("New contact registered:", phoneNumber, recipient, "recipientaddy", recipientAddress);
+      const amount = jsonResult.amount ? jsonResult.amount.toString() : ''; 
+
+
+    }
+    else {
+      const amount = jsonResult.amount ? jsonResult.amount.toString() : ''; 
+      sendTransaction({ to: recipientAddress? recipientAddress : recipient, value: parseEther(amount) });
+    }
+    
+    //sendTransaction({ to: recipientAddress? recipientAddress : recipient, value: parseEther(amount) });
   }
   }
 
@@ -124,8 +160,7 @@ const handleToggleRecording = () => {
   }
 };
 
-const [hasAddress, setHasAddress] = useState(false); // State to manage checkbox
-const [phoneNumber, setPhoneNumber] = useState(''); // State for phone number
+
 
 const [text, setText] = useState('')
 const BACKEND_URL="http://localhost:8000"
@@ -150,15 +185,15 @@ return (
               <label className="flex items-center"> {/* Added flex to label for inline alignment */}
                 <input 
                   type="checkbox" 
-                  checked={hasAddress} 
-                  onChange={() => setHasAddress(!hasAddress)} 
+                  checked={doesnthaveAddress} 
+                  onChange={() => setdoesntHaveAddress(!doesnthaveAddress)}
                   className='text-white-800'
                 />
                 <p className='text-white ml-2'>Recipient does not have an address</p> {/* Added margin-left for spacing */}
               </label>
             </div>
 
-            {hasAddress && ( // Conditionally render the phone number input
+            {doesnthaveAddress && ( // Conditionally render the phone number input
               <div className="mt-2">
                 <input 
                   type="text" 
