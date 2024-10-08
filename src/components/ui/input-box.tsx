@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import { TiMicrophone } from "react-icons/ti";
 import { IoIosPause } from "react-icons/io";
-import { useSendTransaction, useWriteContract, useContractRead, useAccount } from 'wagmi'
+import { useSendTransaction, useWriteContract, useContractRead, useAccount, useReadContract } from 'wagmi'
 import { parseEther } from 'viem'
 //import { walletList } from './wallet-sidebar'
 import {ethers} from 'ethers';
@@ -41,7 +41,7 @@ export default function ModernTextInputWithNavbar() {
   const { data: hash, sendTransaction } = useSendTransaction();
   const [contacts, setContacts] = useState<Contact[]>([]);
 
-  const { data: contactsData } = useContractRead({
+  const { data: contactsData } = useReadContract({
     address: contactManagerAddress,
     abi: contactManagerABI,
     functionName: 'getContacts',
