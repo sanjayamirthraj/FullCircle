@@ -5,6 +5,7 @@ import { useAccount } from 'wagmi'
 import { NavigationHeader } from '@/components/ui/NavBar';
 import NotSignedIn from '@/components/ui/wallet-sign-in';
 import Microphone from '@/components/ui/Microphone';
+import WalletSideBar from '@/components/ui/wallet-sidebar';
 
 const Home: NextPage = () => {
   const account = useAccount();
@@ -12,8 +13,14 @@ const Home: NextPage = () => {
   return (
     <div>
       <NavigationHeader/>
+     
       {account.status === 'connected' ? (
-        <ModernTextInputWithNavbar />
+         <div className="flex">
+           <WalletSideBar/>
+           <div className="flex-grow">
+             <ModernTextInputWithNavbar />
+           </div>
+         </div>
       ) : (
         <NotSignedIn />
       )}

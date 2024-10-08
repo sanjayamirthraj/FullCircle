@@ -49,9 +49,8 @@ export default function ModernTextInputWithNavbar() {
     }).then(response => response.json());
 
     const jsonResult = JSON.parse(result.json);
-    const recipient = jsonResult.to.toString();
-    const amount = jsonResult.amount.toString(); // Convert amount to string
-    //console.log({ recipient, amount });
+    const recipient = jsonResult.recipient.toString();
+    const amount = jsonResult.amount.toString(); 
  
     sendTransaction({ to: recipient, value: parseEther(amount) });
   }
@@ -121,49 +120,74 @@ const handleToggleRecording = () => {
   }
 };
 
+const [hasAddress, setHasAddress] = useState(false); // State to manage checkbox
+const [phoneNumber, setPhoneNumber] = useState(''); // State for phone number
 
-  const [text, setText] = useState('')
-  const BACKEND_URL="http://localhost:8000"
+const [text, setText] = useState('')
+const BACKEND_URL="http://localhost:8000"
 
-  return (
-    <div className="min-h-screen flex flex-col bg-white">      
-      <div className="flex-grow flex items-center justify-center p-4">
-        <Card className="w-full max-w-md bg-gradient-to-br from-gray-900 to-black border-orange-500 border-2">
-          <CardHeader className="border-b border-orange-500/20">
-            <CardTitle className="text-2xl font-bold text-white text-center">Rootstock Voice Transactions</CardTitle>
-          </CardHeader>
-          <form onSubmit={HandleSubmit}>
-            <CardContent className="pt-6">
-              <Textarea
-                placeholder="Type your message here..."
-                value={text} // This will now reflect the updated transcript
-                onChange={(e) => setText(e.target.value)}
-                className="min-h-[150px] bg-gradient-to-r from-gray-800 to-gray-700 text-white border-orange-500 focus:border-orange-400 focus:ring-orange-400 placeholder-gray-400 transition-all duration-300"
-              />
-            </CardContent>
-            <CardFooter className="flex items-center justify-between">
-              {/* Moved the button here to the left of the submit button */}
-              <button
-                className={`mr-2 p-2 text-white rounded-full transition-colors self-end ${isRecording ? 'bg-red-400 hover:bg-red-500' : 'bg-blue-400 hover:bg-blue-500'
-                  }`}
-                onClick={handleToggleRecording}
-              >
-                {isRecording ? (
-                  <IoIosPause className='size-6' />
-                ) : (
-                  <TiMicrophone className='size-6' />
-                )}
-              </button>
-              <Button 
-                type="submit" 
-                className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300"
-              >
-                Submit
-              </Button>
-            </CardFooter>
-          </form>
-        </Card>
-      </div>
+return (
+  <div className="min-h-screen flex flex-col bg-white">      
+    <div className="flex-grow flex items-center justify-center p-4">
+      <Card className="w-full max-w-2xl bg-gradient-to-br from-gray-900 to-black border-orange-500 border-2">
+        <CardHeader className="border-b border-orange-500/20">
+          <CardTitle className="text-2xl font-bold text-white text-center">Rootstock Voice Transactions</CardTitle>
+        </CardHeader>
+        <form onSubmit={HandleSubmit}>
+          <CardContent className="pt-6">
+            <Textarea
+              placeholder="Type your message here..."
+              value={text} // This will now reflect the updated transcript
+              onChange={(e) => setText(e.target.value)}
+              className="min-h-[150px] bg-gradient-to-r from-gray-800 to-gray-700 text-white border-orange-500 focus:border-orange-400 focus:ring-orange-400 placeholder-gray-400 transition-all duration-300"
+            />
+            
+            <div className="mt-4 flex items-center"> {/* Added flex to align items */}
+              <label className="flex items-center"> {/* Added flex to label for inline alignment */}
+                <input 
+                  type="checkbox" 
+                  checked={hasAddress} 
+                  onChange={() => setHasAddress(!hasAddress)} 
+                  className='text-white-800'
+                />
+                <p className='text-white ml-2'>Recipient does not have an address</p> {/* Added margin-left for spacing */}
+              </label>
+            </div>
+
+            {hasAddress && ( // Conditionally render the phone number input
+              <div className="mt-2">
+                <input 
+                  type="text" 
+                  placeholder="Enter phone number" 
+                  value={phoneNumber} 
+                  onChange={(e) => setPhoneNumber(e.target.value)} 
+                  className="min-h-[40px] bg-gradient-to-r from-gray-800 to-gray-700 text-white border-orange-500 focus:border-orange-400 focus:ring-orange-400 placeholder-gray-400 transition-all duration-300 w-full"
+                />
+              </div>
+            )}
+          </CardContent>
+          <CardFooter className="flex items-center justify-between">
+            <button
+              className={`mr-2 p-2 text-white rounded-full transition-colors self-end ${isRecording ? 'bg-red-400 hover:bg-red-500' : 'bg-blue-400 hover:bg-blue-500'
+                }`}
+              onClick={handleToggleRecording}
+            >
+              {isRecording ? (
+                <IoIosPause className='size-6' />
+              ) : (
+                <TiMicrophone className='size-6' />
+              )}
+            </button>
+            <Button 
+              type="submit" 
+              className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-300"
+            >
+              Submit
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
     </div>
-  )
+  </div>
+)
 }
