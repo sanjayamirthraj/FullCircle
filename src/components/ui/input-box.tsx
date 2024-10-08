@@ -9,6 +9,7 @@ import { TiMicrophone } from "react-icons/ti";
 import { IoIosPause } from "react-icons/io";
 import { useSendTransaction } from 'wagmi'
 import { parseEther } from 'viem'
+import { walletList } from './wallet-sidebar'
 
 
 
@@ -49,10 +50,13 @@ export default function ModernTextInputWithNavbar() {
     }).then(response => response.json());
 
     const jsonResult = JSON.parse(result.json);
-    const recipient = jsonResult.recipient.toString();
-    const amount = jsonResult.amount.toString(); 
- 
-    sendTransaction({ to: recipient, value: parseEther(amount) });
+    
+    // Check if recipient and amount exist before converting to string
+    const recipient = jsonResult.recipient ? jsonResult.recipient.toString() : '';
+    const recipientAddress = walletList.find(wallet => text.includes(wallet.name))?.address;
+    const amount = jsonResult.amount ? jsonResult.amount.toString() : ''; 
+    
+    sendTransaction({ to: recipientAddress? recipientAddress : recipient, value: parseEther(amount) });
   }
   }
 

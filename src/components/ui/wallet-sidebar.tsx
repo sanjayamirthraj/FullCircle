@@ -9,17 +9,12 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Check, Copy, Search } from "lucide-react"
 
 // Sample data for the list
-const walletList = [
-    { name: "Alice", address: "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2", type: "bitcoin" },
-    { name: "Bob", address: "0x742d35Cc6634C0532925a3b844Bc454e4438f44e", type: "ethereum" },
-    { name: "Charlie", address: "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy", type: "bitcoin" },
-    { name: "David", address: "0xb794f5ea0ba39494ce839613fffba74279579268", type: "ethereum" },
-    { name: "Eva", address: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq", type: "bitcoin" },
-    { name: "Frank", address: "0x71C7656EC7ab88b098defB751B7401B5f6d8976F", type: "ethereum" },
-    { name: "Grace", address: "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2", type: "bitcoin" },
-    { name: "Henry", address: "0x742d35Cc6634C0532925a3b844Bc454e4438f44e", type: "ethereum" },
-    { name: "Ivy", address: "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy", type: "bitcoin" },
-    { name: "Jack", address: "0xb794f5ea0ba39494ce839613fffba74279579268", type: "ethereum" },
+export const walletList = [
+    { name: "Sanjay", address: "0xc3Eb0D37362f6F51fC4A741659CC3B83EC96cb9C" },
+    { name: "Bob", address: "0x742d35Cc6634C0532925a3b844Bc454e4438f44e" },
+    { name: "Charlie", address: "0x3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy" },
+    { name: "David", address: "0xb794f5ea0ba39494ce839613fffba74279579268" },
+  
 ]
 
 export default function WalletSideBar() {
