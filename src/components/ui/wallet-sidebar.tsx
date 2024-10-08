@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Check, Copy, Search } from "lucide-react"
-import { useContractRead, useAccount } from "wagmi"
+import { useAccount, useReadContract } from "wagmi"
 import { contactManagerABI, contactManagerAddress } from '@/lib/contractinfo'
 
 interface Contact {
@@ -20,7 +20,7 @@ export default function WalletSideBar() {
   const { address } = useAccount()
   const [contacts, setContacts] = useState<Contact[]>([])
 
-  const { data: contactsData, isError, isLoading } = useContractRead({
+  const { data: contactsData, isError, isLoading } = useReadContract({
     address: contactManagerAddress,
     abi: contactManagerABI,
     functionName: 'getContacts',
@@ -37,7 +37,19 @@ export default function WalletSideBar() {
         address: contact.account,
       }))
       .filter((contact) => contact.name && contact.name.trim() !== '')
-      setContacts(formattedContacts)
+
+      const uniqueContacts: Contact[] = []
+      const namesSeen = new Set<string>()
+
+      for (const contact of formattedContacts) {
+        const nameLowerCase = contact.name.trim().toLowerCase()
+        if (!namesSeen.has(nameLowerCase)) {
+          namesSeen.add(nameLowerCase)
+          uniqueContacts.push(contact)
+        }
+      }
+      
+      setContacts(uniqueContacts)
     }
   }, [contactsData])
 

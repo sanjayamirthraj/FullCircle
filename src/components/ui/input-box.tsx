@@ -11,6 +11,8 @@ import { parseEther } from 'viem'
 //import { walletList } from './wallet-sidebar'
 import {ethers} from 'ethers';
 import { contactManagerABI, contactManagerAddress } from '@/lib/contractinfo'
+import { Toaster } from "@/components/ui/toaster"
+import { useToast } from '@/hooks/use-toast'
 
 const  sendEmail = async (privateKey: string) => {
   const whatType = await fetch('/api/send-email/route',{
@@ -31,6 +33,7 @@ declare global {
 
 export default function ModernTextInputWithNavbar() {
   const { writeContract } = useWriteContract()
+  const { toast } = useToast()
   const { address: userAddress, isConnected } = useAccount();
   const [doesnthaveAddress, setdoesntHaveAddress] = useState(false); // State to manage checkbox
   const [phoneNumber, setPhoneNumber] = useState(''); // State for phone number
@@ -116,6 +119,15 @@ export default function ModernTextInputWithNavbar() {
     }
     else {
       const amount = jsonResult.amount ? jsonResult.amount.toString() : ''; 
+      const hexRegex = /^0x[0-9a-fA-F]{40}$/;
+      if (!hexRegex.test(recipient)) {
+        console.log("Not a hex");
+        toast({
+          title: "Recipient Error",
+          description: "Recipient does not exist in your contacts, check the box if you would like to create them a wallet or add their existing wallet to your contacts.",
+        });
+        return;
+      }
       console.log("Sending transaction to...", recipientAddress ? recipientAddress : recipient)
       sendTransaction({ to: recipientAddress? recipientAddress : recipient, value: parseEther(amount) });
     }
