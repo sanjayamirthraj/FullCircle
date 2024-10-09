@@ -79,22 +79,18 @@ export default function WalletSideBar() {
       return
     }
     
-    try {
-        writeContract({
-            address: contactManagerAddress,
-            abi: contactManagerABI,
-            functionName: 'addContact',
-            args: [`0x${contactName}`, contactAddress],
-          });
-      // Reset form fields
-      setContactName('')
-      setContactAddress('')
-      // Optionally, display a success message
-      console.log("Succesfully added")
-    } catch (error) {
-      console.error('Error adding contact:', error)
-      alert('Failed to add contact.')
-    }
+    console.log("contact name: ", contactName);
+    console.log("contact address: ", contactAddress);
+    let Generate = contactAddress.substring(2);
+    writeContract({
+        address: contactManagerAddress,
+        abi: contactManagerABI,
+        functionName: 'addContact',
+        args: [`0x${Generate}`, contactName],
+    });
+    setContactName('')
+    setContactAddress('')
+    console.log("Succesfully added")
   }
 
   return (
